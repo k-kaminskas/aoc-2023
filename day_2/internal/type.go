@@ -17,13 +17,14 @@ type CubeBatch struct {
 	cubes   Cubes
 }
 
+/* Game ------------------------------------------------------------------------------------------------------------- */
+
 type Game struct {
 	gameID      int
 	cubeBatches []*CubeBatch
 }
 
 // IsPossible - Checks whether current game is possible
-// by matching it against static max color combinations
 func (g *Game) IsPossible() bool {
 	for _, batch := range g.cubeBatches {
 		for color, count := range batch.cubes {
@@ -40,7 +41,6 @@ func (g *Game) IsPossible() bool {
 }
 
 // GetCubesUsed - Returns the amount of cubes used between all the batches of a game
-// (Smallest amount of cubes for each color so all batch variations are possible)
 func (g *Game) GetCubesUsed() Cubes {
 	cubesUsed := make(Cubes)
 	for _, batch := range g.cubeBatches {

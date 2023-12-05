@@ -19,6 +19,7 @@ func GetScanner(relativePath string) (*os.File, *bufio.Scanner) {
 	return file, scanner
 }
 
+// StrToInt - Converts string number to integer
 func StrToInt(number string) int {
 	value, err := strconv.Atoi(number)
 	if err != nil {
