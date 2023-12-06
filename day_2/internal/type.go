@@ -53,7 +53,22 @@ func (g *Game) GetCubesUsed() Cubes {
 	return cubesUsed
 }
 
-// GetID - returns ID for current game
-func (g *Game) GetID() int {
-	return g.gameID
+/* Solution Functions ---------------------------------------------------------------------------------------------- */
+
+type SFunction func(g *Game) int
+
+func GetID(game *Game) (id int) {
+	if game.IsPossible() {
+		return game.gameID
+	}
+	return id
+}
+
+func GetScore(game *Game) (score int) {
+	score = 1
+	cubesUsed := game.GetCubesUsed()
+	for _, count := range cubesUsed {
+		score *= count
+	}
+	return score
 }

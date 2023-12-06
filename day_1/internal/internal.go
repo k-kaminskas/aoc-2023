@@ -26,15 +26,17 @@ var numMap = map[string]string{
 	"9":     "9",
 }
 
+type DigitFunction func(s string) (string, string)
+
 // GetDigits
 // Loops through the string & returns first & last digit runes
-func GetDigits(s string) (firstDigit, lastDigit rune) {
+func GetDigits(s string) (firstDigit, lastDigit string) {
 	for _, r := range s {
 		if unicode.IsDigit(r) {
-			if firstDigit == 0 {
-				firstDigit = r
+			if firstDigit == "" {
+				firstDigit = string(r)
 			}
-			lastDigit = r
+			lastDigit = string(r)
 		}
 	}
 	return firstDigit, lastDigit

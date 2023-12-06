@@ -7,12 +7,23 @@ import (
 )
 
 const GearSymbolSignifier = "*"
+const GearNumberCount = 2
 
 // DataIndex - K: starting column ID | V: entry value
 type DataIndex map[int]string
 
 // PartNumMap - K: gear symbol location in the matrix | V: adjacent part numbers
 type PartNumMap map[string][]int
+
+func (p PartNumMap) GetGearSum() (sum int) {
+	for _, nums := range p {
+		// A gear is any * symbol that is adjacent to exactly two part numbers
+		if len(nums) == GearNumberCount {
+			sum += nums[0] * nums[1]
+		}
+	}
+	return sum
+}
 
 /* Matrix ----------------------------------------------------------------------------------------------------------- */
 
@@ -45,9 +56,8 @@ func (m Matrix) GetRowPartNumberSum(cRowID int) int {
 	return sum
 }
 
-// GetGearPartNumbersMap - Loops through all the numbers in the row &
-// tries to find any adjacent gear symbols. Produces a symbol location ID
-// for any matched case & adds up all part numbers from all adjacent rows
+// GetGearPartNumbersMap - Produces a symbol location ID for any
+// matched "*" & aggregates all part numbers from all adjacent rows
 func (m Matrix) GetGearPartNumbersMap(cRowID int) PartNumMap {
 	cRow, adjacentNums := m[cRowID], make(PartNumMap)
 	for numColID, number := range cRow.DetectedNumbers {

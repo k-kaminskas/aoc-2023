@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func solution1(fp string) int {
+func solution(fp string, fn internal.SFunction) int {
 	file, scanner := utils.GetScanner(fp)
 	defer file.Close()
 
@@ -16,42 +16,18 @@ func solution1(fp string) int {
 		line := strings.TrimSpace(scanner.Text())
 
 		// Parse the game line
-		game, err := parser.ParseLine(line)
-		if err != nil {
-			panic(err)
-		}
+		game := parser.ParseLine(line)
 		if game != nil {
-			if game.IsPossible() {
-				totalSum += game.GetID()
-			}
+			totalSum += fn(game)
 		}
 	}
 	return totalSum
 }
 
+func solution1(fp string) int {
+	return solution(fp, internal.GetID)
+}
+
 func solution2(fp string) int {
-	file, scanner := utils.GetScanner(fp)
-	defer file.Close()
-
-	totalScore := 0
-	parser := internal.NewParser()
-	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-
-		// Parse the game line
-		game, err := parser.ParseLine(line)
-		if err != nil {
-			panic(err)
-		}
-
-		if game != nil {
-			gameScore := 1
-			cubesUsed := game.GetCubesUsed()
-			for _, count := range cubesUsed {
-				gameScore *= count
-			}
-			totalScore += gameScore
-		}
-	}
-	return totalScore
+	return solution(fp, internal.GetScore)
 }

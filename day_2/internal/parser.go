@@ -23,29 +23,20 @@ func NewParser() *Parser {
 	}
 }
 
-// ParseLine
-// Parses game line & creates datasets
-func (p *Parser) ParseLine(line string) (*Game, error) {
-	if line == "" {
-		return nil, fmt.Errorf("line is empty")
+func (p *Parser) ParseLine(line string) *Game {
+	match := p.gameIDRegex.FindStringSubmatch(line)
+	if match != nil {
+		gameData := strings.TrimPrefix(line, match[0])
+		if gameData != "" {
+			return &Game{
+				gameID:      utils.StrToInt(match[1]),
+				cubeBatches: p.parseCubeBatch(gameData),
+			}
+		}
 	}
-
-	gameMatch := p.gameIDRegex.FindStringSubmatch(line)
-	if gameMatch == nil {
-		return nil, fmt.Errorf("no game number found in line: %s", line)
-	}
-	gameData := strings.TrimPrefix(line, gameMatch[0])
-	if gameData == "" {
-		return nil, fmt.Errorf("failed to extract game data from line: %s", line)
-	}
-
-	return &Game{
-		gameID:      utils.StrToInt(gameMatch[1]),
-		cubeBatches: p.parseCubeBatch(gameData),
-	}, nil
+	panic(fmt.Sprintf("Failed to parse the line - %s", line))
 }
 
-// Parses game data line & extracts batches
 func (p *Parser) parseCubeBatch(gameData string) []*CubeBatch {
 	var batches []*CubeBatch
 	for en, batch := range strings.Split(gameData, p.batchDelimiter) {
