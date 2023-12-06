@@ -7,11 +7,28 @@ import (
 
 const AdjacentNumberCount = 2
 
+func solution1(fp string) int {
+	file, scanner := utils.GetScanner(fp)
+	defer file.Close()
+
+	totalSum := 0
+	parser := internal.NewParser()
+	matrix := parser.ParseFile(scanner)
+
+	for rowID := range matrix {
+		totalSum += matrix.GetRowPartNumberSum(rowID)
+	}
+
+	return totalSum
+}
+
 func solution2(fp string) int {
 	file, scanner := utils.GetScanner(fp)
 	defer file.Close()
 
-	matrix := internal.NewMatrix(scanner)
+	parser := internal.NewParser()
+	matrix := parser.ParseFile(scanner)
+
 	aggregatedMap := make(internal.PartNumMap)
 	for rowID := range matrix {
 		partNumsMap := matrix.GetGearPartNumbersMap(rowID)

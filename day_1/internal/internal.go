@@ -1,9 +1,8 @@
-package day1
+package internal
 
 import (
-	utils "aot"
-	"strconv"
 	"strings"
+	"unicode"
 )
 
 var numMap = map[string]string{
@@ -27,9 +26,24 @@ var numMap = map[string]string{
 	"9":     "9",
 }
 
-// Loops through the number map & returns first
+// GetDigits
+// Loops through the string & returns first & last digit runes
+func GetDigits(s string) (firstDigit, lastDigit rune) {
+	for _, r := range s {
+		if unicode.IsDigit(r) {
+			if firstDigit == 0 {
+				firstDigit = r
+			}
+			lastDigit = r
+		}
+	}
+	return firstDigit, lastDigit
+}
+
+// ParseDigits
+// Loops through the number map & parses first
 // & last found digits based on indexes
-func getDigits(s string) (firstDigit, lastDigit string) {
+func ParseDigits(s string) (firstDigit, lastDigit string) {
 	var minIndex, maxIndex int
 	var minKey, maxKey string
 
@@ -44,24 +58,4 @@ func getDigits(s string) (firstDigit, lastDigit string) {
 		}
 	}
 	return numMap[minKey], numMap[maxKey]
-}
-
-// Solution for the second task
-func solution2(fp string) int {
-	file, scanner := utils.GetScanner(fp)
-	defer file.Close()
-
-	totalSum := 0
-	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-		firstDigit, lastDigit := getDigits(line)
-
-		// Compose a number & add to the final sum
-		number, err := strconv.Atoi(firstDigit + lastDigit)
-		if err != nil {
-			panic(err)
-		}
-		totalSum += number
-	}
-	return totalSum
 }
