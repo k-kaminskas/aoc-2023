@@ -10,8 +10,7 @@ func solution1(fp string) int {
 	file, scanner := utils.GetScanner(fp)
 	defer file.Close()
 
-	parser := internal.NewParser()
-	tfMap, seeds := parser.ParseFile(scanner)
+	tfMap, seeds := internal.NewParser().ParseFile(scanner)
 
 	trSeeds := make([]int, 0)
 	for _, seed := range seeds {
@@ -31,12 +30,10 @@ func solution2(fp string) int {
 	file, scanner := utils.GetScanner(fp)
 	defer file.Close()
 
-	parser := internal.NewParser()
-	tfMap, seeds := parser.ParseFile(scanner)
-	seedRanges := internal.ChunkIntSliceToPairs(seeds)
-
 	ranges := make([]*internal.Range, 0)
-	for _, seed := range seedRanges {
+	tfMap, seeds := internal.NewParser().ParseFile(scanner)
+
+	for _, seed := range internal.ChunkIntSliceToPairs(seeds) {
 		range_ := []*internal.Range{{Start: seed[0], End: seed[0] + seed[1]}}
 		for _, key := range tfMap.GetSortedKeys() {
 			function, ok := tfMap[key]

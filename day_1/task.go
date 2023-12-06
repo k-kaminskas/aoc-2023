@@ -7,17 +7,17 @@ import (
 	"strings"
 )
 
-func solution1(fp string) int {
+func solution(fp string, fn internal.DigitFunction) int {
 	file, scanner := utils.GetScanner(fp)
 	defer file.Close()
 
 	totalSum := 0
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
-		firstDigitR, lastDigitR := internal.GetDigits(line)
+		firstDigitR, lastDigitR := fn(line)
 
 		// Compose a number & add to the final sum
-		number, err := strconv.Atoi(string(firstDigitR) + string(lastDigitR))
+		number, err := strconv.Atoi(firstDigitR + lastDigitR)
 		if err != nil {
 			panic(err)
 		}
@@ -26,21 +26,10 @@ func solution1(fp string) int {
 	return totalSum
 }
 
+func solution1(fp string) int {
+	return solution(fp, internal.GetDigits)
+}
+
 func solution2(fp string) int {
-	file, scanner := utils.GetScanner(fp)
-	defer file.Close()
-
-	totalSum := 0
-	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-		firstDigit, lastDigit := internal.ParseDigits(line)
-
-		// Compose a number & add to the final sum
-		number, err := strconv.Atoi(firstDigit + lastDigit)
-		if err != nil {
-			panic(err)
-		}
-		totalSum += number
-	}
-	return totalSum
+	return solution(fp, internal.ParseDigits)
 }
